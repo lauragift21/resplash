@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "react-app",
-    "description": "This project is really great.",
-    "slug": "react-app",
+    "name": "resplash",
+    "description": "Image gallery with a twist",
+    "slug": "resplash",
     "privacy": "public",
     "sdkVersion": "31.0.0",
     "platforms": ["ios", "android"],

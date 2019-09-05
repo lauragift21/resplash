@@ -1,14 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Unsplash from 'unsplash-js';
-import { APP_ACCESS_KEY, APP_SECRET } from './config';
-
-const unsplash = new Unsplash({
-  applicationId: APP_ACCESS_KEY,
-  secret: APP_SECRET,
-});
-
-console.log(unsplash);
+import unsplash from './config';
 
 export default class App extends React.Component {
   render() {
