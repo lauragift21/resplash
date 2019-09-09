@@ -1,6 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-import { Image } from 'react-native-elements';
+import axios from 'axios';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image } from 'react-native';
+// import { Image } from 'react-native-elements';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ export default class App extends React.Component {
     this.state = {
       isLoading: true,
       client_id: '3ab52700b5843c4aa63c29db436b8d854cdcbd9e8917a6fb378a22c7ddda07f6',
+      data: []
     }
   }
 
@@ -15,30 +17,14 @@ export default class App extends React.Component {
     this.makeRequest();
   }
 
-  makeRequest = () => {
+  makeRequest = async() => {
     const { client_id } = this.state;
-  const url = `https://api.unsplash.com/photos?client_id=${client_id}&page=1`;
-    return fetch(url).then((response) => {
-      response.json()
-      console.log(response);
-      this.setState({
-        isLoading: false,
-        data: [response]
-      })
-    })
-    .catch((error) => {
+    const unsplashResponse = await axios.get(
+      `https://api.unsplash.com/photos?client_id=${client_id}&page=1&per_page=10`
+    ).catch((error) => {
       console.error(error)
-    })
-  }
-
-  renderLoading = () => {
-    if (this.state.isLoading) {
-      return (
-        <View style={{flex: 1, padding: 20}}>
-          <ActivityIndicator />
-        </View>
-      )
-    }
+    });
+    this.setState({ data: unsplashResponse.data});
   }
 
   render() {
@@ -48,15 +34,17 @@ export default class App extends React.Component {
         <Text style={styles.text}>Resplash App</Text>
         <Text>A clone of Unsplash don't take it too seriously 😃</Text>
         <FlatList
-          data={data}
-          renderItem={({item, index}) => (
-            <Image
-              source={{uri: item.urls }}
-              style={{ width: 100, height: 100}}
-              PlaceholderContent={<ActivityIndicator />}
-            />
-          )}
-          keyExtractor={(item, index) => index.toString()}
+            data={data}
+            numColumns={2}
+            renderItem={({item, index}) => {
+               return (
+               <Image
+                source={{uri: item.urls && item.urls.raw }}
+                resizeMMode="contain"
+                style={{ width: 250, height: 250}}
+              />)
+            }}
+            keyExtractor={(item, index) => index.toString()}
         />
       </View>
     );
@@ -71,8 +59,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 33,
-  },
-  item: {
-    fontSize: 34,
   }
 });
